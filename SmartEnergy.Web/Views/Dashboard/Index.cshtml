@@ -1,0 +1,296 @@
+@model SmartEnergy.Web.Controllers.DashboardViewModel
+@{
+    ViewData["Title"] = "Ana Panel – KEPSAŞ Abone Portalı";
+    var userName = Context.Request.Cookies["UserName"] ?? "Betül Demircan";
+    var unpaidBill = Model.Bills.FirstOrDefault(b => b.Status == "Bekliyor") ?? Model.Bills.FirstOrDefault();
+    var unpaidCount = Model.Bills.Count(b => b.Status == "Bekliyor");
+    var paidBills = Model.Bills.Where(b => b.Status == "Ödendi").ToList();
+}
+
+<!-- Hoş Geldiniz Başlığı -->
+<div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
+    <div>
+        <h2 class="fw-bold mb-1" style="color: var(--kepsas-navy);">
+            Hoş Geldiniz, @userName 👋
+        </h2>
+        <p class="text-muted mb-0">Müşteri No: <strong>K-784920</strong> &nbsp;|&nbsp; Abonelikleriniz, faturalarınız ve işlemlerinize buradan ulaşabilirsiniz.</p>
+    </div>
+    <div class="d-flex gap-2">
+        <a asp-controller="Bill" asp-action="Index" class="btn btn-sm btn-danger fw-bold px-3">
+            <i class="bi bi-receipt me-1"></i> Faturamı Öde
+        </a>
+        <a asp-controller="QuickAccess" asp-action="Randevu" class="btn btn-sm btn-outline-primary fw-bold px-3">
+            <i class="bi bi-calendar-plus me-1"></i> Randevu Al
+        </a>
+    </div>
+</div>
+
+<!-- KPI Kartları -->
+<div class="dashboard-grid mb-4">
+    <div class="metric-card">
+        <div class="metric-icon" style="background:#dbeafe;">
+            <i class="bi bi-file-earmark-text fs-4" style="color:#1d4ed8;"></i>
+        </div>
+        <div class="metric-data">
+            <span>Aktif Abonelik</span>
+            <h2>2</h2>
+        </div>
+    </div>
+
+    <div class="metric-card">
+        <div class="metric-icon" style="background:#fee2e2;">
+            <i class="bi bi-receipt-cutoff fs-4" style="color:#b91c1c;"></i>
+        </div>
+        <div class="metric-data">
+            <span>Ödenmemiş Fatura</span>
+            <h2>@unpaidCount</h2>
+        </div>
+    </div>
+
+    <div class="metric-card">
+        <div class="metric-icon" style="background:#dcfce7;">
+            <i class="bi bi-lightning-charge-fill fs-4" style="color:#15803d;"></i>
+        </div>
+        <div class="metric-data">
+            <span>Güncel Tüketim</span>
+            <h2>@(unpaidBill != null ? unpaidBill.ConsumptionKwh.ToString("N2") : "286,40") kWh</h2>
+        </div>
+    </div>
+
+    <div class="metric-card">
+        <div class="metric-icon" style="background:#fef3c7;">
+            <i class="bi bi-currency-exchange fs-4" style="color:#b45309;"></i>
+        </div>
+        <div class="metric-data">
+            <span>Ödenecek Tutar</span>
+            <h2>@(unpaidBill != null ? unpaidBill.TotalAmount.ToString("N2") : "742,50") ₺</h2>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <!-- Son Faturalar (Dinamik) -->
+    <div class="col-lg-7">
+        <div class="portal-card h-100 p-0 border">
+            <div class="d-flex justify-content-between align-items-center px-4 py-3 border-bottom bg-white rounded-top">
+                <h5 class="fw-bold mb-0" style="color:var(--kepsas-navy);">
+                    <i class="bi bi-receipt me-2 text-danger"></i> Son Faturalar
+                </h5>
+                <a asp-controller="Bill" asp-action="Index" class="btn btn-sm btn-outline-primary fw-semibold">Tümünü Gör</a>
+            </div>
+            <div class="table-responsive">
+                <table class="table-custom align-middle">
+                    <thead>
+                        <tr>
+                            <th>Fatura No</th>
+                            <th>Dönem</th>
+                            <th>Tutar</th>
+                            <th>Son Ödeme</th>
+                            <th>Durum</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.Bills != null && Model.Bills.Any())
+                        {
+                            @foreach (var bill in Model.Bills)
+                            {
+                                <tr>
+                                    <td><strong>@bill.BillNumber</strong></td>
+                                    <td>@bill.BillingPeriod</td>
+                                    <td>
+                                        <strong class="@(bill.Status == "Bekliyor" ? "text-danger" : "text-dark")">
+                                            @bill.TotalAmount.ToString("N2") ₺
+                                        </strong>
+                                    </td>
+                                    <td>@bill.DueDate.ToString("dd.MM.yyyy")</td>
+                                    <td>
+                                        @if (bill.Status == "Bekliyor")
+                                        {
+                                            <span class="badge badge-unpaid">Bekliyor</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge badge-paid">Ödendi</span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bildirimler (Dinamik) -->
+    <div class="col-lg-5">
+        <div class="portal-card h-100 p-0 border">
+            <div class="d-flex justify-content-between align-items-center px-4 py-3 border-bottom bg-white rounded-top">
+                <h5 class="fw-bold mb-0" style="color:var(--kepsas-navy);">
+                    <i class="bi bi-bell-fill me-2 text-warning"></i> Güncel Bildirimler
+                </h5>
+                <a asp-controller="Notification" asp-action="Index" class="btn btn-sm btn-outline-secondary fw-semibold">Tümü (@Model.Notifications.Count)</a>
+            </div>
+            <div class="list-group list-group-flush">
+                @if (Model.Notifications != null && Model.Notifications.Any())
+                {
+                    @foreach (var notif in Model.Notifications.Take(4))
+                    {
+                        var iconClass = notif.Type switch
+                        {
+                            "Fatura" => "bi-receipt-cutoff text-danger",
+                            "Randevu" => "bi-calendar-check text-success",
+                            "Ödeme" => "bi-check-circle-fill text-primary",
+                            "Duyuru" => "bi-broadcast text-warning",
+                            "Tasarruf" => "bi-leaf-fill text-success",
+                            _ => "bi-info-circle-fill text-secondary"
+                        };
+
+                        var bgClass = !notif.IsRead ? "bg-warning bg-opacity-10" : "";
+
+                        <div class="list-group-item px-4 py-3 border-bottom @bgClass">
+                            <div class="d-flex gap-3 align-items-start">
+                                <i class="bi @iconClass mt-1 fs-5"></i>
+                                <div>
+                                    <p class="mb-0 fw-semibold text-dark" style="font-size:13px;">@notif.Title</p>
+                                    <small class="text-muted d-block" style="line-height:1.3; font-size:12px;">@notif.Message</small>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tüketim Grafiği ve Hızlı İşlemler -->
+<div class="row g-4 mb-4">
+    <div class="col-lg-8">
+        <div class="portal-card p-4 border">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="fw-bold mb-0" style="color:var(--kepsas-navy);">
+                    <i class="bi bi-bar-chart-fill me-2 text-primary"></i> Aylık Tüketim Grafiği (kWh)
+                </h5>
+                <span class="badge bg-light text-primary border px-3 py-2">SUB-380901</span>
+            </div>
+            <canvas id="consumptionChart" style="max-height:260px;"></canvas>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="portal-card p-4 border h-100">
+            <h5 class="fw-bold mb-3" style="color:var(--kepsas-navy);">
+                <i class="bi bi-lightning-fill me-2 text-warning"></i> Hızlı İşlemler
+            </h5>
+            <div class="d-grid gap-2">
+                @if (unpaidBill != null)
+                {
+                    <a asp-controller="Payment" asp-action="Pay" asp-route-billNumber="@unpaidBill.BillNumber" asp-route-amount="@unpaidBill.TotalAmount" class="btn btn-danger fw-bold py-2">
+                        <i class="bi bi-credit-card me-1"></i> Fatura Öde (@unpaidBill.TotalAmount.ToString("N2") ₺)
+                    </a>
+                }
+                <a asp-controller="QuickAccess" asp-action="GuvenceBedeli" class="btn btn-outline-primary fw-semibold py-2">
+                    <i class="bi bi-shield-check me-1"></i> Güvence Bedeli Sorgula
+                </a>
+                <a asp-controller="QuickAccess" asp-action="Randevu" class="btn btn-outline-success fw-semibold py-2">
+                    <i class="bi bi-calendar-event me-1"></i> Randevu Al
+                </a>
+                <a asp-controller="Application" asp-action="Index" class="btn btn-outline-secondary fw-semibold py-2">
+                    <i class="bi bi-journal-check me-1"></i> Başvurularım (2)
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Son Ödemeler (Dinamik) -->
+<div class="portal-card p-0 border mb-4">
+    <div class="px-4 py-3 border-bottom bg-white rounded-top d-flex justify-content-between align-items-center">
+        <h5 class="fw-bold mb-0" style="color:var(--kepsas-navy);">
+            <i class="bi bi-check-circle-fill me-2 text-success"></i> Son Gerçekleşen Ödemeler
+        </h5>
+        <a asp-controller="Payment" asp-action="Index" class="btn btn-sm btn-outline-secondary fw-semibold">Tümünü Gör</a>
+    </div>
+    <div class="table-responsive">
+        <table class="table-custom align-middle">
+            <thead>
+                <tr>
+                    <th>Tarih</th>
+                    <th>Fatura No</th>
+                    <th>Tutar</th>
+                    <th>Kanal</th>
+                    <th>Durum</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (paidBills.Any())
+                {
+                    @foreach (var p in paidBills)
+                    {
+                        <tr>
+                            <td>@p.DueDate.ToString("dd.MM.yyyy")</td>
+                            <td><strong>@p.BillNumber</strong></td>
+                            <td><strong class="text-success">@p.TotalAmount.ToString("N2") ₺</strong></td>
+                            <td><i class="bi bi-credit-card me-1"></i> Online Ödeme / Kredi Kartı</td>
+                            <td><span class="badge badge-paid">Başarılı</span></td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="5" class="text-center text-muted py-3">Henüz ödenmiş fatura kaydı bulunmamaktadır.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('consumptionChart');
+    if (ctx) {
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs'],
+                datasets: [{
+                    label: 'Tüketim (kWh)',
+                    data: [240.5, 265.0, 250.0, 286.4, 290.0],
+                    backgroundColor: [
+                        'rgba(14,45,83,0.7)',
+                        'rgba(14,45,83,0.7)',
+                        'rgba(14,45,83,0.7)',
+                        'rgba(227,30,36,0.8)',
+                        'rgba(14,45,83,0.5)',
+                    ],
+                    borderRadius: 8,
+                    borderSkipped: false,
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: ctx => ` ${ctx.raw} kWh`
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: '#f1f5f9' },
+                        ticks: { callback: v => v + ' kWh' }
+                    },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+    }
+</script>
+}

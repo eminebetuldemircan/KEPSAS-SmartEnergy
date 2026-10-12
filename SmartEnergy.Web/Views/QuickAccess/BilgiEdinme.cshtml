@@ -1,0 +1,28 @@
+@{
+    ViewData["Title"] = "Bilgi Edinme Formu";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-7">
+        <div class="portal-card border shadow-sm p-4">
+            <h3 class="fw-bold mb-2" style="color: var(--kepsas-navy);"><i class="bi bi-exclamation-circle text-warning me-2"></i> Bilgi Edinme Başvuru Formu</h3>
+            <p class="text-muted mb-4">Bilgi Edinme Hakkı Kanunu kapsamında KEPSAŞ süreçleri ve mevzuat hakkındaki sorularınızı iletin.</p>
+
+            <form asp-controller="QuickAccess" asp-action="SubmitForm" method="post">
+                <input type="hidden" name="formType" value="Bilgi Edinme" />
+
+                <div class="form-group mb-3">
+                    <label>Konu Başlığı</label>
+                    <input type="text" name="title" class="form-input" placeholder="Bilgi talep edilen konu" required />
+                </div>
+
+                <div class="form-group mb-4">
+                    <label>Talebiniz / Mesajınız</label>
+                    <textarea name="description" class="form-input" rows="4" placeholder="Sorunuzu veya bilgi edinmek istediğiniz hususları yazınız..." required></textarea>
+                </div>
+
+                <button type="submit" class="btn-kepsas-navy py-3 w-100 fw-bold">Bilgi Talebini Gönder <i class="bi bi-send me-1"></i></button>
+            </form>
+        </div>
+    </div>
+</div>

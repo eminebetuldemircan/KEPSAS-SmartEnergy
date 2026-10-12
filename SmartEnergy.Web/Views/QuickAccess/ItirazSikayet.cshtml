@@ -1,0 +1,38 @@
+@{
+    ViewData["Title"] = "İtiraz ve Şikayet Formu";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-7">
+        <div class="portal-card border shadow-sm p-4">
+            <h3 class="fw-bold mb-2" style="color: var(--kepsas-navy);"><i class="bi bi-chat-square-text text-danger me-2"></i> İtiraz ve Şikayet Formu</h3>
+            <p class="text-muted mb-4">Fatura, sayaç, hizmet kalitesi veya işlemler ile ilgili itiraz/şikayetinizi KEPSAŞ müşteri temsilcilerimize iletin.</p>
+
+            <form asp-controller="QuickAccess" asp-action="SubmitForm" method="post">
+                <input type="hidden" name="formType" value="İtiraz / Şikayet" />
+
+                <div class="form-group mb-3">
+                    <label>Konu Kategori</label>
+                    <select class="form-input" required>
+                        <option>Fatura Tutar İtirazı</option>
+                        <option>Sayaç Okuma Hataları</option>
+                        <option>Müşteri Hizmetleri Şikayeti</option>
+                        <option>Diğer İtirazlar</option>
+                    </select>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label>Başlık</label>
+                    <input type="text" name="title" class="form-input" placeholder="İtiraz konusunu kısa özetleyin" required />
+                </div>
+
+                <div class="form-group mb-4">
+                    <label>Detaylı Açıklama</label>
+                    <textarea name="description" class="form-input" rows="4" placeholder="Lütfen detayları belirtiniz..." required></textarea>
+                </div>
+
+                <button type="submit" class="btn-kepsas-navy py-3 w-100 fw-bold">İtirazı Gönder <i class="bi bi-send me-1"></i></button>
+            </form>
+        </div>
+    </div>
+</div>

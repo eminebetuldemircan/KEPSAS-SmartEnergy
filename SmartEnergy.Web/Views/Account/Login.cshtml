@@ -1,0 +1,190 @@
+@{
+    ViewData["Title"] = "Giriş Yap - KEPSAŞ Abone Portalı";
+}
+
+<div class="login-grid">
+
+    <!-- LEFT: LOGIN FORM CARD -->
+    <div class="portal-card login-box">
+        <div class="avatar-circle">
+            <i class="bi bi-person-fill fs-2"></i>
+        </div>
+
+        <span class="portal-badge">ABONE PORTAL</span>
+
+        <h1 class="login-title">Giriş Yap</h1>
+        <p class="login-subtitle">Aboneliğinizle ilgili işlemlere güvenli ve hızlı bir şekilde erişin.</p>
+
+        @if (ViewBag.ErrorMessage != null)
+        {
+            <div class="alert alert-danger font-size-13 text-start py-2 px-3 mb-3">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i> @ViewBag.ErrorMessage
+            </div>
+        }
+
+        <form asp-controller="Account" asp-action="Login" method="post">
+            <div class="form-group">
+                <label for="tcknVkn">TCKN / VKN</label>
+                <input type="text" id="tcknVkn" name="tcknVkn" class="form-input" placeholder="TCKN veya VKN giriniz" value="12345678901" required />
+            </div>
+
+            <div class="form-group mb-2">
+                <label for="password">Şifre</label>
+                <input type="password" id="password" name="password" class="form-input" placeholder="Şifrenizi giriniz" value="123456" required />
+            </div>
+
+            <a href="#" class="forgot-link">Şifremi Unuttum</a>
+
+            <button type="submit" class="btn-kepsas-navy mt-4">
+                Giriş Yap <i class="bi bi-arrow-right"></i>
+            </button>
+        </form>
+
+        <div class="divider">
+            <span>veya</span>
+        </div>
+
+        <a href="#" class="btn-edevlet">
+            <svg width="22" height="18" viewBox="0 0 24 24" fill="#e31e24">
+                <circle cx="12" cy="12" r="10" stroke="#e31e24" stroke-width="2" fill="none"/>
+                <path d="M12 6 C8 6 8 18 12 18 C16 18 16 6 12 6 Z" fill="#e31e24"/>
+            </svg>
+            e-Devlet ile Giriş Yap
+        </a>
+
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success font-size-13 text-start py-2 px-3 mb-3">
+                <i class="bi bi-check-circle-fill me-2"></i> @TempData["SuccessMessage"]
+            </div>
+        }
+
+        <div class="register-prompt">
+            Henüz kayıt olmadınız mı? <a asp-controller="Account" asp-action="Register">Kayıt Ol</a>
+        </div>
+    </div>
+
+    <!-- RIGHT: QUICK ACCESS CARD -->
+    <div class="portal-card quick-access-box">
+        <span class="label-orange">KOLAY ERİŞİM</span>
+        <h2 class="main-heading">Hızlı İşlemler</h2>
+        <p class="main-sub">Giriş yapmadan kullanabileceğiniz işlemlere hızlıca ulaşın.</p>
+
+        <div class="actions-grid">
+
+            <!-- 1. Güvence Bedeli Sorgula -->
+            <a asp-controller="QuickAccess" asp-action="GuvenceBedeli" class="action-tile">
+                <div class="tile-left">
+                    <div class="tile-icon" style="background:#e0f2fe; color:#0284c7;">
+                        <i class="bi bi-file-earmark-text"></i>
+                    </div>
+                    <div class="tile-info">
+                        <h4>Güvence Bedeli</h4>
+                        <span>Sorgula</span>
+                    </div>
+                </div>
+                <div class="tile-arrow"><i class="bi bi-arrow-right"></i></div>
+            </a>
+
+            <!-- 2. Tazminat Sorgula -->
+            <a asp-controller="QuickAccess" asp-action="Tazminat" class="action-tile">
+                <div class="tile-left">
+                    <div class="tile-icon" style="background:#ffedd5; color:#ea580c;">
+                        <i class="bi bi-file-earmark-search"></i>
+                    </div>
+                    <div class="tile-info">
+                        <h4>Tazminat</h4>
+                        <span>Sorgula</span>
+                    </div>
+                </div>
+                <div class="tile-arrow"><i class="bi bi-arrow-right"></i></div>
+            </a>
+
+            <!-- 3. Randevu İşlemleri -->
+            <a asp-controller="QuickAccess" asp-action="Randevu" class="action-tile">
+                <div class="tile-left">
+                    <div class="tile-icon" style="background:#dcfce7; color:#16a34a;">
+                        <i class="bi bi-calendar-event"></i>
+                    </div>
+                    <div class="tile-info">
+                        <h4>Randevu</h4>
+                        <span>İşlemleri</span>
+                    </div>
+                </div>
+                <div class="tile-arrow"><i class="bi bi-arrow-right"></i></div>
+            </a>
+
+            <!-- 4. Ödeme Kanalları -->
+            <a asp-controller="QuickAccess" asp-action="OdemeKanallari" class="action-tile">
+                <div class="tile-left">
+                    <div class="tile-icon" style="background:#e0e7ff; color:#4f46e5;">
+                        <i class="bi bi-credit-card"></i>
+                    </div>
+                    <div class="tile-info">
+                        <h4>Ödeme</h4>
+                        <span>Kanalları</span>
+                    </div>
+                </div>
+                <div class="tile-arrow"><i class="bi bi-arrow-right"></i></div>
+            </a>
+
+            <!-- 5. Evrak İşlemleri -->
+            <a asp-controller="QuickAccess" asp-action="Evrak" class="action-tile">
+                <div class="tile-left">
+                    <div class="tile-icon" style="background:#f3e8ff; color:#9333ea;">
+                        <i class="bi bi-folder-check"></i>
+                    </div>
+                    <div class="tile-info">
+                        <h4>Evrak</h4>
+                        <span>İşlemleri</span>
+                    </div>
+                </div>
+                <div class="tile-arrow"><i class="bi bi-arrow-right"></i></div>
+            </a>
+
+            <!-- 6. Kaçak Kullanım İhbarı -->
+            <a asp-controller="QuickAccess" asp-action="KacakIhbar" class="action-tile">
+                <div class="tile-left">
+                    <div class="tile-icon" style="background:#ccfbf1; color:#0d9488;">
+                        <i class="bi bi-lightning-charge"></i>
+                    </div>
+                    <div class="tile-info">
+                        <h4>Kaçak Kullanım</h4>
+                        <span>İhbarı</span>
+                    </div>
+                </div>
+                <div class="tile-arrow"><i class="bi bi-arrow-right"></i></div>
+            </a>
+
+            <!-- 7. Bilgi Edinme Formu -->
+            <a asp-controller="QuickAccess" asp-action="BilgiEdinme" class="action-tile">
+                <div class="tile-left">
+                    <div class="tile-icon" style="background:#fef9c3; color:#ca8a04;">
+                        <i class="bi bi-exclamation-circle"></i>
+                    </div>
+                    <div class="tile-info">
+                        <h4>Bilgi Edinme</h4>
+                        <span>Formu</span>
+                    </div>
+                </div>
+                <div class="tile-arrow"><i class="bi bi-arrow-right"></i></div>
+            </a>
+
+            <!-- 8. İtiraz - Şikayet Formu -->
+            <a asp-controller="QuickAccess" asp-action="ItirazSikayet" class="action-tile">
+                <div class="tile-left">
+                    <div class="tile-icon" style="background:#ffe4e6; color:#e11d48;">
+                        <i class="bi bi-chat-square-text"></i>
+                    </div>
+                    <div class="tile-info">
+                        <h4>İtiraz - Şikayet</h4>
+                        <span>Formu</span>
+                    </div>
+                </div>
+                <div class="tile-arrow"><i class="bi bi-arrow-right"></i></div>
+            </a>
+
+        </div>
+    </div>
+
+</div>

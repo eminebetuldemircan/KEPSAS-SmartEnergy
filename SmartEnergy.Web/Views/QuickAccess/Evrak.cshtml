@@ -1,0 +1,34 @@
+@{
+    ViewData["Title"] = "Evrak İşlemleri";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-7">
+        <div class="portal-card border shadow-sm p-4">
+            <h3 class="fw-bold mb-2" style="color: var(--kepsas-navy);"><i class="bi bi-folder-check text-purple me-2"></i> Evrak İşlemleri & Belge Yükleme</h3>
+            <p class="text-muted mb-4">Abonelik, devir veya başvuru işlemleriniz için eksik belgelerinizi dijital olarak yükleyin.</p>
+
+            <form asp-controller="QuickAccess" asp-action="SubmitForm" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="formType" value="Evrak Yükleme" />
+                <input type="hidden" name="title" value="Belge Yükleme Talebi" />
+
+                <div class="form-group mb-3">
+                    <label>Belge Türü</label>
+                    <select class="form-input" required>
+                        <option>Kimlik Fotokopisi (TCKN)</option>
+                        <option>Tapu / Kira Kontratı</option>
+                        <option>DASK Poliçesi</option>
+                        <option>İmza Sirküleri (Kurumsal)</option>
+                    </select>
+                </div>
+
+                <div class="form-group mb-4">
+                    <label>Dosya Seç (PDF, JPG, PNG - Max 5MB)</label>
+                    <input type="file" class="form-input" required />
+                </div>
+
+                <button type="submit" class="btn-kepsas-navy py-3 w-100 fw-bold">Evrak Yükle <i class="bi bi-cloud-upload me-1"></i></button>
+            </form>
+        </div>
+    </div>
+</div>

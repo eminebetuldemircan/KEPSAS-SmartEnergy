@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - KEPSAŞ SmartEnergy Abone Portalı</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Top Header -->
+    <header class="kepsas-header">
+        <a asp-controller="Account" asp-action="Login" class="kepsas-brand">
+            <svg class="kepsas-logo-swirl" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="45" fill="none" />
+                <path d="M 50,15 A 35,35 0 0,1 85,50 A 15,15 0 0,1 70,35 A 15,15 0 0,0 50,15 Z" fill="#e31e24" />
+                <path d="M 85,50 A 35,35 0 0,1 50,85 A 15,15 0 0,1 65,70 A 15,15 0 0,0 85,50 Z" fill="#008cd3" />
+                <path d="M 50,85 A 35,35 0 0,1 15,50 A 15,15 0 0,1 30,65 A 15,15 0 0,0 50,85 Z" fill="#3fb449" />
+                <path d="M 15,50 A 35,35 0 0,1 50,15 A 15,15 0 0,1 35,30 A 15,15 0 0,0 15,50 Z" fill="#f58220" />
+            </svg>
+            <div class="kepsas-title-box">
+                <span class="kepsas-brand-name">KEPSAŞ</span>
+                <span class="kepsas-tagline">"1926'den beri elektrik veriyoruz"</span>
+            </div>
+        </a>
+
+        <div class="call-center-card">
+            <div class="call-center-icon">
+                <i class="bi bi-headset"></i>
+            </div>
+            <div class="call-center-text">
+                <small>7/24 Çağrı Merkezi</small>
+                <strong>444 97 88</strong>
+            </div>
+        </div>
+    </header>
+
+    <div class="brand-stripe"></div>
+
+    @if (Context.Request.Cookies["IsLoggedIn"] == "true")
+    {
+        <nav class="kepsas-navbar">
+            <ul class="nav-menu">
+                <li class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Dashboard" ? "active" : "")">
+                    <a asp-controller="Dashboard" asp-action="Index"><i class="bi bi-grid-1x2-fill me-1"></i> Ana Sayfa</a>
+                </li>
+                <li class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Subscription" ? "active" : "")">
+                    <a asp-controller="Subscription" asp-action="Index"><i class="bi bi-file-earmark-text-fill me-1"></i> Aboneliklerim</a>
+                </li>
+                <li class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Bill" ? "active" : "")">
+                    <a asp-controller="Bill" asp-action="Index"><i class="bi bi-receipt-cutoff me-1"></i> Faturalarım</a>
+                </li>
+                <li class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Payment" ? "active" : "")">
+                    <a asp-controller="Payment" asp-action="Index"><i class="bi bi-credit-card-fill me-1"></i> Ödemelerim</a>
+                </li>
+                <li class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Consumption" ? "active" : "")">
+                    <a asp-controller="Consumption" asp-action="Index"><i class="bi bi-lightning-charge-fill me-1"></i> Tüketim</a>
+                </li>
+                <li class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Meter" ? "active" : "")">
+                    <a asp-controller="Meter" asp-action="Index"><i class="bi bi-speedometer2 me-1"></i> Sayaçlarım</a>
+                </li>
+                <li class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Application" ? "active" : "")">
+                    <a asp-controller="Application" asp-action="Index"><i class="bi bi-journal-check me-1"></i> Başvurularım</a>
+                </li>
+                <li class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "QuickAccess" ? "active" : "")">
+                    <a asp-controller="QuickAccess" asp-action="Index"><i class="bi bi-lightning-fill me-1"></i> Hızlı Erişim</a>
+                </li>
+            </ul>
+
+            <div class="user-profile-menu">
+                <a asp-controller="Notification" asp-action="Index" class="text-white text-decoration-none position-relative me-3">
+                    <i class="bi bi-bell-fill fs-5"></i>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 9px;">3</span>
+                </a>
+                <a asp-controller="Account" asp-action="Profile" class="text-white text-decoration-none">
+                    <i class="bi bi-person-circle fs-5 me-1"></i> @(Context.Request.Cookies["UserName"] ?? "Betül Demircan")
+                </a>
+                <a asp-controller="Account" asp-action="Logout" class="btn btn-sm btn-outline-light ms-3">Çıkış Yap</a>
+            </div>
+        </nav>
+    }
+
+    <main class="portal-container">
+        @RenderBody()
+    </main>
+
+    <footer class="kepsas-footer">
+        <div class="container d-flex justify-content-between align-items-center flex-wrap">
+            <div>
+                © 2026 KEPSAŞ - Kayseri Elektrik Perakende Satış A.Ş. Tüm hakları saklıdır.
+            </div>
+            <div>
+                <a href="#" class="text-muted me-3 text-decoration-none">Gizlilik Politikası</a>
+                <a href="#" class="text-muted me-3 text-decoration-none">Kullanım Şartları</a>
+                <a href="#" class="text-muted text-decoration-none">KVKK Bilgilendirme</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

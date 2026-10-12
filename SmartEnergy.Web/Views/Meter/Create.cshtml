@@ -1,0 +1,141 @@
+﻿@model SmartEnergy.Web.Models.CreateMeterViewModel
+
+@{
+    ViewData["Title"] = "Yeni Sayaç Ekle";
+}
+
+<div class="dashboard-page">
+
+    <div class="dashboard-header">
+
+        <div>
+            <h1>Yeni Sayaç Ekle</h1>
+
+            <p>
+                KEPSAŞ SmartEnergy sistemine yeni sayaç tanımlayın.
+            </p>
+        </div>
+
+        <a asp-action="Index"
+           class="filter-button"
+           style="background:#e5e7eb;
+                  color:#374151;
+                  text-decoration:none;">
+            ← Sayaçlara Dön
+        </a>
+
+    </div>
+
+
+    <div class="dashboard-card"
+         style="max-width:750px;">
+
+        <div class="card-header">
+
+            <div>
+                <h2>Sayaç Bilgileri</h2>
+
+                <p>
+                    Yeni sayaç için gerekli bilgileri girin.
+                </p>
+            </div>
+
+        </div>
+
+
+        <form asp-action="Create"
+              method="post">
+
+            <div asp-validation-summary="ModelOnly"
+                 style="color:#dc2626;
+                        margin-bottom:20px;">
+            </div>
+
+
+            <div class="filter-grid">
+
+
+                <div class="filter-item">
+
+                    <label>Sayaç Numarası</label>
+
+                    <input asp-for="MeterNumber"
+                           class="form-control"
+                           placeholder="Örn. 1000002" />
+
+                </div>
+
+
+                <div class="filter-item">
+
+                    <label>Seri Numarası</label>
+
+                    <input asp-for="SerialNumber"
+                           class="form-control"
+                           placeholder="Örn. SN-KEPSAS-0002" />
+
+                </div>
+
+
+                <div class="filter-item">
+
+                    <label>Sayaç Tipi</label>
+
+                    <select asp-for="Type"
+                            class="form-control">
+
+                        <option value="2">
+                            Elektrik
+                        </option>
+
+                        <option value="1">
+                            Su
+                        </option>
+
+                        <option value="3">
+                            Doğalgaz
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="filter-item">
+
+                    <label>Kurulum Tarihi</label>
+
+                    <input asp-for="InstallationDate"
+                           type="date"
+                           class="form-control" />
+
+                </div>
+
+            </div>
+
+
+            <div style="margin-top:25px;
+                        display:flex;
+                        gap:12px;">
+
+                <button type="submit"
+                        class="filter-button">
+                    Sayaç Ekle
+                </button>
+
+
+                <a asp-action="Index"
+                   class="filter-button"
+                   style="background:#e5e7eb;
+                          color:#374151;
+                          text-decoration:none;">
+                    İptal
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>

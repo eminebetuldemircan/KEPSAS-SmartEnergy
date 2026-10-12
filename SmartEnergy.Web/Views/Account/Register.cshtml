@@ -1,0 +1,266 @@
+@model SmartEnergy.Web.Services.RegisterViewModel
+@{
+    ViewData["Title"] = "Yeni Abone Kaydı - KEPSAŞ SmartEnergy";
+}
+
+<div class="login-grid" style="max-width: 950px; margin: 30px auto;">
+
+    <!-- LEFT: REGISTRATION FORM CARD -->
+    <div class="portal-card login-box" style="text-align: left; max-width: 520px;">
+        <div class="d-flex align-items-center gap-3 mb-3">
+            <div class="avatar-circle" style="margin: 0; width: 44px; height: 44px;">
+                <i class="bi bi-person-plus-fill fs-4"></i>
+            </div>
+            <div>
+                <span class="portal-badge" style="margin: 0;">YENİ ÜYELİK</span>
+                <h2 class="login-title mb-0" style="font-size: 22px;">Abone Kayıt Formu</h2>
+            </div>
+        </div>
+
+        <p class="login-subtitle mb-4">Elektrik aboneliğinizi dijitalden yönetmek için bilgilerinizi eksiksiz doldurunuz.</p>
+
+        @if (ViewBag.ErrorMessage != null)
+        {
+            <div class="alert alert-danger font-size-13 py-2 px-3 mb-3">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i> @ViewBag.ErrorMessage
+            </div>
+        }
+
+        <form asp-controller="Account" asp-action="Register" method="post" id="registerForm">
+            <input type="hidden" asp-for="VerificationCode" id="hiddenVerificationCode" />
+
+            <!-- STEP 1: Abone Bilgileri -->
+            <div id="step1Fields">
+                <div class="row g-2 mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label font-size-13 fw-semibold">Ad</label>
+                        <input type="text" asp-for="FirstName" id="FirstName" class="form-input" placeholder="Adınız" required />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label font-size-13 fw-semibold">Soyad</label>
+                        <input type="text" asp-for="LastName" id="LastName" class="form-input" placeholder="Soyadınız" required />
+                    </div>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label class="form-label font-size-13 fw-semibold">TCKN / VKN</label>
+                    <input type="text" asp-for="TcknVkn" id="TcknVkn" class="form-input" placeholder="11 haneli TCKN veya VKN" maxlength="11" required />
+                </div>
+
+                <div class="form-group mb-3">
+                    <label class="form-label font-size-13 fw-semibold">Telefon Numarası</label>
+                    <input type="tel" asp-for="Phone" id="Phone" class="form-input" placeholder="05XX XXX XX XX" required />
+                </div>
+
+                <div class="form-group mb-3">
+                    <label class="form-label font-size-13 fw-semibold">Gmail / E-posta Adresi</label>
+                    <input type="email" asp-for="Email" id="emailInput" class="form-input" placeholder="ornek@gmail.com" required />
+                    <small class="text-muted font-size-12 mt-1 d-block">Kayıt Ol butonuna bastığınızda 4 haneli SMS/E-posta doğrulama kodunuz bu adrese gönderilecektir.</small>
+                </div>
+
+                <div class="form-group mb-4">
+                    <label class="form-label font-size-13 fw-semibold">Şifre Belirleyin</label>
+                    <input type="password" asp-for="Password" id="Password" class="form-input" placeholder="En az 6 karakter" required />
+                </div>
+
+                <button type="button" id="btnInitiateRegister" class="btn-kepsas-navy w-100 py-3">
+                    <i class="bi bi-arrow-right-circle me-1"></i> Kayıt Ol
+                </button>
+            </div>
+
+            <!-- STEP 2: 4 Haneli Doğrulama Kodu Alanı (Kayıt Ol butonuna basınca açılır) -->
+            <div id="step2Verification" style="display:none;" class="p-4 rounded border mt-2 bg-light">
+                <div class="text-center mb-3">
+                    <div class="d-inline-flex p-3 rounded-circle bg-warning bg-opacity-10 text-warning mb-2">
+                        <i class="bi bi-shield-check fs-2"></i>
+                    </div>
+                    <h5 class="fw-bold mb-1 text-navy">Güvenlik Doğrulaması</h5>
+                    <p class="text-muted font-size-13 mb-0" id="sentNotificationText">
+                        Doğrulama kodu e-postanıza gönderildi.
+                    </p>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label class="form-label font-size-13 fw-bold text-dark d-flex justify-content-between">
+                        <span>4 Haneli Doğrulama Kodu:</span>
+                        <span id="countdownTimer" class="badge bg-warning text-dark">05:00</span>
+                    </label>
+                    <input type="text" id="visibleCodeInput" class="form-input text-center fw-bold fs-3 letter-spacing-4" placeholder="• • • •" maxlength="4" autocomplete="off" />
+                    <small id="verificationHelpText" class="form-text text-muted mt-1 d-block text-center"></small>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="button" id="btnBackToForm" class="btn btn-outline-secondary w-50 py-2">
+                        <i class="bi bi-arrow-left me-1"></i> Geri Dön
+                    </button>
+                    <button type="button" id="btnConfirmAndComplete" class="btn btn-warning w-50 py-2 fw-bold text-white" style="background:#F58220; border-color:#F58220;">
+                        <i class="bi bi-check-circle me-1"></i> Onayla & Tamamla
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        <div class="register-prompt mt-4 text-center">
+            Zaten bir hesabınız var mı? <a asp-controller="Account" asp-action="Login" class="fw-bold text-primary">Giriş Yap</a>
+        </div>
+    </div>
+
+    <!-- RIGHT: INFO & BENEFIT BOX -->
+    <div class="portal-card quick-access-box d-flex flex-column justify-content-between" style="background: linear-gradient(135deg, #002B49 0%, #004d80 100%); color: white;">
+        <div>
+            <span class="label-orange" style="background:rgba(245, 130, 32, 0.2); color:#F58220; border: 1px solid rgba(245, 130, 32, 0.4);">KEPSAŞ DİJİTAL AYRICALIKLARI</span>
+            <h2 class="main-heading text-white mt-3">Kolay ve Hızlı Enerji Yönetimi</h2>
+            <p class="main-sub text-white-50">KEPSAŞ Abone Portalı'na kaydolarak elektrik aboneliğinizle ilgili tüm işlemleri 7/24 tek merkezden gerçekleştirebilirsiniz.</p>
+
+            <div class="d-flex flex-column gap-3 mt-4">
+                <div class="d-flex align-items-center gap-3 p-3 rounded" style="background: rgba(255,255,255,0.08);">
+                    <i class="bi bi-shield-check fs-3 text-warning"></i>
+                    <div>
+                        <h6 class="mb-0 fw-bold">4 Haneli SMS / E-posta Güvenlik Kodu</h6>
+                        <small class="text-white-50">Kayıt Ol'a bastığınız an Gmail hesabınıza 4 haneli tek kullanımlık güvenlik kodu gelir.</small>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-center gap-3 p-3 rounded" style="background: rgba(255,255,255,0.08);">
+                    <i class="bi bi-receipt fs-3 text-warning"></i>
+                    <div>
+                        <h6 class="mb-0 fw-bold">Anlık Fatura Takibi ve Ödeme</h6>
+                        <small class="text-white-50">Güncel ve geçmiş faturalarınızı inceleyebilir, online güvenli ödeme yapabilirsiniz.</small>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-center gap-3 p-3 rounded" style="background: rgba(255,255,255,0.08);">
+                    <i class="bi bi-bell-fill fs-3 text-warning"></i>
+                    <div>
+                        <h6 class="mb-0 fw-bold">Canlı Veri ve Bildirimler</h6>
+                        <small class="text-white-50">Tüm bildirimler ve sayaç okuma verileri veritabanından dinamik olarak panelinize yansır.</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-4 pt-3 border-top border-white border-opacity-10 text-center text-white-50 font-size-12">
+            Müşteri İletişim Merkezi: <strong>444 7 784</strong> &nbsp;|&nbsp; <strong>kepsas.com.tr</strong>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+<script>
+    let timerInterval = null;
+
+    const step1 = document.getElementById('step1Fields');
+    const step2 = document.getElementById('step2Verification');
+    const initiateBtn = document.getElementById('btnInitiateRegister');
+    const confirmBtn = document.getElementById('btnConfirmAndComplete');
+    const backBtn = document.getElementById('btnBackToForm');
+    const visibleCodeInput = document.getElementById('visibleCodeInput');
+    const hiddenVerificationCode = document.getElementById('hiddenVerificationCode');
+    const helpText = document.getElementById('verificationHelpText');
+    const sentText = document.getElementById('sentNotificationText');
+
+    initiateBtn.addEventListener('click', async function() {
+        const firstName = document.getElementById('FirstName').value.trim();
+        const lastName = document.getElementById('LastName').value.trim();
+        const tckn = document.getElementById('TcknVkn').value.trim();
+        const phone = document.getElementById('Phone').value.trim();
+        const email = document.getElementById('emailInput').value.trim();
+        const password = document.getElementById('Password').value.trim();
+
+        if (!firstName || !lastName || !tckn || !phone || !email || !password) {
+            alert('Lütfen kayıt formundaki tüm alanları doldurunuz.');
+            return;
+        }
+
+        if (tckn.length !== 11) {
+            alert('TCKN / VKN 11 haneli olmalıdır.');
+            return;
+        }
+
+        initiateBtn.disabled = true;
+        initiateBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Kod Gönderiliyor...';
+
+        try {
+            const resp = await fetch('/Account/SendVerificationCode', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: email, fullName: firstName + ' ' + lastName })
+            });
+
+            const data = await resp.json();
+
+            if (data.success) {
+                step1.style.display = 'none';
+                step2.style.display = 'block';
+                sentText.innerHTML = `<strong>${email}</strong> adresinize 4 haneli doğrulama kodu gönderildi.`;
+
+                visibleCodeInput.value = '';
+                if (data.debugCode) {
+                    helpText.className = 'form-text text-primary fw-bold mt-1 d-block text-center';
+                    helpText.innerText = 'Doğrulama Kodunuz: ' + data.debugCode + ' (Lütfen bu kodu aşağıdaki alana giriniz)';
+                } else {
+                    helpText.className = 'form-text text-muted mt-1 d-block text-center';
+                    helpText.innerText = 'Lütfen Gmail gelen kutunuzu (veya Spam klasörünü) kontrol ediniz.';
+                }
+
+                startTimer(300);
+                visibleCodeInput.focus();
+            } else {
+                alert('Hata: ' + (data.message || 'Kod gönderilemedi.'));
+                initiateBtn.disabled = false;
+                initiateBtn.innerHTML = '<i class="bi bi-arrow-right-circle me-1"></i> Kayıt Ol';
+            }
+        } catch (err) {
+            alert('Sunucu ile bağlantı hatası oluştu.');
+            initiateBtn.disabled = false;
+            initiateBtn.innerHTML = '<i class="bi bi-arrow-right-circle me-1"></i> Kayıt Ol';
+        }
+    });
+
+    backBtn.addEventListener('click', function() {
+        step2.style.display = 'none';
+        step1.style.display = 'block';
+        initiateBtn.disabled = false;
+        initiateBtn.innerHTML = '<i class="bi bi-arrow-right-circle me-1"></i> Kayıt Ol';
+        if (timerInterval) clearInterval(timerInterval);
+    });
+
+    confirmBtn.addEventListener('click', function() {
+        const code = visibleCodeInput.value.trim();
+        if (!code || code.length !== 4) {
+            alert('Lütfen 4 haneli doğrulama kodunu eksiksiz giriniz.');
+            visibleCodeInput.focus();
+            return;
+        }
+
+        hiddenVerificationCode.value = code;
+        confirmBtn.disabled = true;
+        confirmBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Kaydediliyor...';
+        document.getElementById('registerForm').submit();
+    });
+
+    function startTimer(duration) {
+        let timer = duration;
+        const countdownEl = document.getElementById('countdownTimer');
+
+        if (timerInterval) clearInterval(timerInterval);
+
+        timerInterval = setInterval(() => {
+            let minutes = parseInt(timer / 60, 10);
+            let seconds = parseInt(timer % 60, 10);
+
+            minutes = minutes < 10 ? "0" + minutes : minutes;
+            seconds = seconds < 10 ? "0" + seconds : seconds;
+
+            countdownEl.textContent = minutes + ":" + seconds;
+
+            if (--timer < 0) {
+                clearInterval(timerInterval);
+                countdownEl.textContent = "Süre Doldu";
+                countdownEl.className = "badge bg-danger";
+            }
+        }, 1000);
+    }
+</script>
+}

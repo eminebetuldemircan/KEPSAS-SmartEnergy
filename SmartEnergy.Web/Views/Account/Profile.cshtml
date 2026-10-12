@@ -1,0 +1,47 @@
+@{
+    ViewData["Title"] = "Hesabım & Profil Bilgileri";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="portal-card border shadow-sm p-4">
+            <div class="d-flex align-items-center gap-3 mb-4">
+                <div class="avatar-circle m-0" style="width:60px; height:60px;">
+                    <i class="bi bi-person-fill fs-3"></i>
+                </div>
+                <div>
+                    <h3 class="fw-bold mb-0" style="color: var(--kepsas-navy);">@ViewBag.UserName</h3>
+                    <span class="badge bg-light text-primary border">Müşteri No: @ViewBag.CustomerNumber</span>
+                </div>
+            </div>
+
+            <hr class="my-4" />
+
+            <h5 class="fw-bold mb-3 text-navy"><i class="bi bi-person-vcard me-2"></i> Kişisel Bilgiler</h5>
+            <div class="row g-3 mb-4">
+                <div class="col-md-6">
+                    <label class="form-label font-size-12 fw-bold text-navy">TCKN / VKN</label>
+                    <input type="text" class="form-input" value="@ViewBag.TcknVkn" readonly />
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label font-size-12 fw-bold text-navy">Müşteri Türü</label>
+                    <input type="text" class="form-input" value="Bireysel Abone" readonly />
+                </div>
+            </div>
+
+            <h5 class="fw-bold mb-3 text-navy"><i class="bi bi-telephone me-2"></i> İletişim Bilgileri</h5>
+            <div class="row g-3 mb-4">
+                <div class="col-md-6">
+                    <label class="form-label font-size-12 fw-bold text-navy">E-Posta Adresi</label>
+                    <input type="email" class="form-input" value="@ViewBag.Email" />
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label font-size-12 fw-bold text-navy">Telefon Numarası</label>
+                    <input type="text" class="form-input" value="@ViewBag.Phone" />
+                </div>
+            </div>
+
+            <button type="button" class="btn-kepsas-navy py-3 w-100 fw-bold">Bilgileri Güncelle <i class="bi bi-save me-1"></i></button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,305 @@
+﻿@model SmartEnergy.Web.Models.MeterViewModel
+
+@{
+    ViewData["Title"] = "Sayaç Detayı";
+
+    var meterStatus = Model.Status == 1
+        ? "Aktif"
+        : "Pasif";
+}
+
+<div class="dashboard-page">
+
+    <div class="dashboard-header">
+
+        <div>
+            <h1>Sayaç Detayı</h1>
+
+            <p>
+                Elektrik sayacı hakkında detaylı sistem bilgileri
+            </p>
+        </div>
+
+        <div style="display:flex; gap:10px;">
+
+            <a asp-controller="Meter"
+               asp-action="Reading"
+               asp-route-meterId="@Model.Id"
+               class="btn btn-primary"
+               style="text-decoration:none;">
+                + Yeni Okuma
+            </a>
+
+            <a asp-controller="Meter"
+               asp-action="Index"
+               class="filter-button"
+               style="background:#e5e7eb;
+                      color:#374151;
+                      text-decoration:none;">
+                ← Sayaçlara Dön
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="summary-grid">
+
+        <div class="summary-card">
+
+            <div>
+                <span class="summary-label">
+                    Sayaç Numarası
+                </span>
+
+                <h2>
+                    @Model.MeterNumber
+                </h2>
+            </div>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <div>
+                <span class="summary-label">
+                    Seri Numarası
+                </span>
+
+                <h2>
+                    @Model.SerialNumber
+                </h2>
+            </div>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <div>
+                <span class="summary-label">
+                    Durum
+                </span>
+
+                <h2>
+                    @meterStatus
+                </h2>
+            </div>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <div>
+                <span class="summary-label">
+                    Son Endeks
+                </span>
+
+                <h2>
+                    @Model.LastIndex.ToString("N2")
+                </h2>
+
+                <small>kWh</small>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="dashboard-card"
+         style="margin-top:25px;">
+
+        <div class="card-header">
+
+            <div>
+                <h2>Elektrik Sayacı Bilgileri</h2>
+
+                <p>
+                    Sistemde kayıtlı elektrik sayacı bilgileri
+                </p>
+            </div>
+
+        </div>
+
+
+        <div class="stat-row">
+
+            <span>Sayaç Numarası</span>
+
+            <strong>
+                @Model.MeterNumber
+            </strong>
+
+        </div>
+
+
+        <div class="stat-row">
+
+            <span>Seri Numarası</span>
+
+            <strong>
+                @Model.SerialNumber
+            </strong>
+
+        </div>
+
+
+        <div class="stat-row">
+
+            <span>Sayaç Türü</span>
+
+            <strong>
+                Elektrik
+            </strong>
+
+        </div>
+
+
+        <div class="stat-row">
+
+            <span>Durum</span>
+
+            <strong>
+                @meterStatus
+            </strong>
+
+        </div>
+
+
+        <div class="stat-row">
+
+            <span>Kurulum Tarihi</span>
+
+            <strong>
+                @Model.InstallationDate.ToString("dd.MM.yyyy")
+            </strong>
+
+        </div>
+
+
+        <div class="stat-row">
+
+            <span>Son Okuma Tarihi</span>
+
+            <strong>
+                @(Model.LastReadingDate.HasValue
+                                ? Model.LastReadingDate.Value.ToString("dd.MM.yyyy HH:mm")
+                                : "Henüz okuma yapılmadı")
+            </strong>
+
+        </div>
+
+
+        <div class="stat-row">
+
+            <span>Son Sayaç Endeksi</span>
+
+            <strong>
+                @Model.LastIndex.ToString("N2") kWh
+            </strong>
+
+        </div>
+
+    </div>
+    <div class="dashboard-card"
+         style="margin-top:25px;">
+
+        <div class="card-header">
+
+            <div>
+                <h2>Sayaç Okuma Geçmişi</h2>
+
+                <p>
+                    Bu elektrik sayacı için sisteme kaydedilen
+                    son okumalar
+                </p>
+            </div>
+
+        </div>
+
+
+        @{
+            var readings =
+            ViewBag.Readings
+            as List<SmartEnergy.Web.Models.ConsumptionRecordViewModel>;
+        }
+
+
+        @if (readings is not null && readings.Any())
+        {
+            <div style="overflow-x:auto;">
+
+                <table class="table">
+
+                    <thead>
+                        <tr>
+                            <th>Okuma Tarihi</th>
+                            <th>Sayaç Endeksi</th>
+                            <th>Tüketim</th>
+                            <th>Okuma Türü</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        @foreach (var reading in readings
+                                            .OrderByDescending(x => x.ReadingDate))
+                        {
+                            <tr>
+
+                                <td>
+                                    @reading.ReadingDate.ToString(
+                                    "dd.MM.yyyy HH:mm")
+                        </td>
+
+                        <td>
+                            @reading.MeterIndex.ToString("N2")
+                            kWh
+                        </td>
+
+                        <td>
+                            <strong>
+                                @reading.ConsumptionKwh.ToString("N2")
+                                kWh
+                            </strong>
+                        </td>
+
+                        <td>
+                            @if (reading.IsEstimated)
+                                    {
+                                        <span>
+                                            Tahmini
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span>
+                                            Gerçek Okuma
+                                        </span>
+                                    }
+                                </td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+        }
+        else
+        {
+            <div style="padding:25px 0;
+                        color:#6b7280;">
+                Bu sayaç için henüz okuma kaydı bulunmuyor.
+            </div>
+        }
+
+    </div>
+
+</div>

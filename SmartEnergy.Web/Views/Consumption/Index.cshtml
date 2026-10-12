@@ -1,0 +1,357 @@
+﻿@model SmartEnergy.Web.Models.ConsumptionFilterViewModel
+
+@{
+    ViewData["Title"] = "Tüketim Yönetimi";
+}
+
+<div class="dashboard-page">
+
+    <div class="dashboard-header">
+
+        <div>
+            <h1>Tüketim Yönetimi</h1>
+
+            <p>
+                Elektrik sayaçlarının tüketim kayıtlarını
+                görüntüleyin ve analiz edin.
+            </p>
+        </div>
+
+    </div>
+
+
+    <!-- FİLTRELER -->
+
+    <div class="dashboard-card">
+
+        <div class="card-header">
+
+            <div>
+                <h2>Tüketim Filtreleri</h2>
+
+                <p>
+                    Sayaç ve tarih aralığına göre tüketim kayıtlarını
+                    filtreleyin.
+                </p>
+            </div>
+
+        </div>
+
+
+        <form asp-controller="Consumption"
+              asp-action="Index"
+              method="get">
+
+            <div style="
+                display:grid;
+                grid-template-columns:repeat(3, 1fr);
+                gap:20px;
+                align-items:end;">
+
+                <!-- Sayaç -->
+
+                <div class="form-group">
+
+                    <label for="meterId">
+                        Sayaç
+                    </label>
+
+                    <select id="meterId"
+                            name="meterId"
+                            class="form-control">
+
+                        <option value="">
+                            Tüm Sayaçlar
+                        </option>
+
+                        @foreach (var meter in Model.Meters)
+                        {
+                            <option value="@meter.Id"
+                                    selected="@(Model.MeterId == meter.Id)">
+                                @meter.MeterNumber
+                            </option>
+                        }
+
+                    </select>
+
+                </div>
+
+
+                <!-- Başlangıç Tarihi -->
+
+                <div class="form-group">
+
+                    <label for="startDate">
+                        Başlangıç Tarihi
+                    </label>
+
+                    <input id="startDate"
+                           name="startDate"
+                           type="date"
+                           class="form-control"
+                           value="@Model.StartDate?.ToString("yyyy-MM-dd")" />
+
+                </div>
+
+
+                <!-- Bitiş Tarihi -->
+
+                <div class="form-group">
+
+                    <label for="endDate">
+                        Bitiş Tarihi
+                    </label>
+
+                    <input id="endDate"
+                           name="endDate"
+                           type="date"
+                           class="form-control"
+                           value="@Model.EndDate?.ToString("yyyy-MM-dd")" />
+
+                </div>
+
+            </div>
+
+
+            <div style="
+                display:flex;
+                gap:10px;
+                margin-top:20px;">
+
+                <button type="submit"
+                        class="btn btn-primary">
+
+                    Filtrele
+
+                </button>
+
+
+                <a asp-controller="Consumption"
+                   asp-action="Index"
+                   class="btn btn-outline-secondary">
+
+                    Filtreleri Temizle
+
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+
+    <!-- ÖZET KARTLARI -->
+
+    <div class="summary-grid"
+         style="margin-top:25px;">
+
+        <div class="summary-card">
+
+            <div>
+
+                <span class="summary-label">
+                    Toplam Okuma
+                </span>
+
+                <h2>
+                    @Model.Records.Count
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <div>
+
+                <span class="summary-label">
+                    Toplam Tüketim
+                </span>
+
+                <h2>
+                    @Model.Records
+                    .Sum(x => x.ConsumptionKwh)
+                    .ToString("N2")
+                </h2>
+
+                <small>kWh</small>
+
+            </div>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <div>
+
+                <span class="summary-label">
+                    Gerçek Okuma
+                </span>
+
+                <h2>
+                    @Model.Records.Count(x => !x.IsEstimated)
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <div>
+
+                <span class="summary-label">
+                    Tahmini Okuma
+                </span>
+
+                <h2>
+                    @Model.Records.Count(x => x.IsEstimated)
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- TÜKETİM KAYITLARI -->
+
+    <div class="dashboard-card"
+         style="margin-top:25px;">
+
+        <div class="card-header">
+
+            <div>
+
+                <h2>
+                    Tüketim Kayıtları
+                </h2>
+
+                <p>
+                    Filtrelenen elektrik tüketim kayıtları
+                </p>
+
+            </div>
+
+        </div>
+
+
+        @if (Model.Records.Any())
+        {
+            <div style="overflow-x:auto;">
+
+                <table class="table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Okuma Tarihi
+                            </th>
+
+                            <th>
+                                Sayaç
+                            </th>
+
+                            <th>
+                                Endeks
+                            </th>
+
+                            <th>
+                                Tüketim
+                            </th>
+
+                            <th>
+                                Okuma Türü
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        @foreach (var record in Model.Records
+                                            .OrderByDescending(x => x.ReadingDate))
+                        {
+                            <tr>
+
+                                <td>
+                                    @record.ReadingDate.ToString(
+                                    "dd.MM.yyyy HH:mm")
+                        </td>
+
+
+                        <td>
+
+                            <strong>
+                                @record.MeterNumber
+                            </strong>
+
+                        </td>
+
+
+                        <td>
+                            @record.MeterIndex.ToString("N2")
+                            kWh
+                        </td>
+
+
+                        <td>
+
+                            <strong>
+                                @record.ConsumptionKwh.ToString("N2")
+                                kWh
+                            </strong>
+
+                        </td>
+
+
+                        <td>
+
+                            @if (record.IsEstimated)
+                                    {
+                                        <span>
+                                            Tahmini
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span>
+                                            Gerçek Okuma
+                                        </span>
+                                    }
+
+                                </td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+        }
+        else
+        {
+            <div style="
+                    padding:25px 0;
+                    color:#6b7280;">
+
+                Seçtiğiniz kriterlere uygun tüketim kaydı bulunmuyor.
+
+            </div>
+        }
+
+    </div>
+
+</div>

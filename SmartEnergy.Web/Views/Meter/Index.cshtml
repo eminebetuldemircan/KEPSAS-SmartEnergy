@@ -1,0 +1,254 @@
+﻿@model List<SmartEnergy.Web.Models.MeterViewModel>
+
+@{
+    ViewData["Title"] = "Sayaçlar";
+}
+
+<div class="dashboard-page">
+
+    <div class="dashboard-header">
+
+        <div>
+            <h1>Sayaç Yönetimi</h1>
+
+            <p>
+                KEPSAŞ sistemindeki enerji sayaçlarını görüntüleyin
+                ve yönetin.
+            </p>
+        </div>
+
+        <a asp-controller="Meter"
+           asp-action="Create"
+           class="btn btn-primary">
+            + Yeni Sayaç
+        </a>
+
+    </div>
+
+
+    <!-- Sayaç Özeti -->
+
+    <div class="summary-grid">
+
+        <div class="summary-card">
+
+            <div class="card-icon">
+                ⚡
+            </div>
+
+            <div>
+
+                <span>Toplam Sayaç</span>
+
+                <h2>
+                    @Model.Count
+                </h2>
+
+                <small>
+                    Sisteme kayıtlı
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <div class="card-icon">
+                🟢
+            </div>
+
+            <div>
+
+                <span>Aktif Sayaç</span>
+
+                <h2>
+                    @Model.Count(x => x.Status == 1)
+                </h2>
+
+                <small>
+                    Çalışır durumda
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <div class="card-icon">
+                📊
+            </div>
+
+            <div>
+
+                <span>Son Okuma</span>
+
+                <h2>
+                    @(Model.Any()
+                                        ? Model.Max(x => x.LastIndex).ToString("N2")
+                                        : "0.00")
+                </h2>
+
+                <small>
+                    Sayaç endeksi
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <div class="card-icon">
+                🏢
+            </div>
+
+            <div>
+
+                <span>Elektrik Sayaçları</span>
+
+                <h2>
+                    @Model.Count(x => x.Type == 2)
+                </h2>
+
+                <small>
+                    Elektrik sayaçları
+                </small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Sayaç Listesi -->
+
+    <div class="dashboard-card">
+
+        <div class="card-header">
+
+            <div>
+
+                <h3>Sayaç Listesi</h3>
+
+                <p>
+                    Sistemde kayıtlı sayaçlar
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="table-responsive">
+
+            <table class="table align-middle">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Sayaç No</th>
+
+                        <th>Seri No</th>
+
+                        <th>Tür</th>
+
+                        <th>Durum</th>
+
+                        <th>Kurulum Tarihi</th>
+
+                        <th>Son Endeks</th>
+
+                        <th>İşlem</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    @foreach (var meter in Model)
+                    {
+                        <tr>
+
+                            <td>
+
+                                <strong>
+                                    @meter.MeterNumber
+                                </strong>
+
+                            </td>
+
+
+                            <td>
+                                @meter.SerialNumber
+                            </td>
+
+
+                            <td>
+                                <span>Elektrik</span>
+                            </td>
+
+
+                            <td>
+
+                                @if (meter.Status == 1)
+                                {
+                                    <span class="badge bg-success">
+                                        Aktif
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">
+                                        Pasif
+                                    </span>
+                                }
+
+                            </td>
+
+
+                            <td>
+                                @meter.InstallationDate.ToString("dd.MM.yyyy")
+                            </td>
+
+
+                            <td>
+                                @meter.LastIndex.ToString("N2")
+                            </td>
+
+
+                            <td>
+
+                            <td>
+
+                                <a asp-controller="Meter"
+                                   asp-action="Details"
+                                   asp-route-id="@meter.Id"
+                                   class="btn btn-sm btn-outline-primary">
+                                    Detay
+                                </a>
+
+                            </td>
+
+                            </td>
+
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>

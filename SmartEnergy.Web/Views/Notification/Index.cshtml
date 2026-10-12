@@ -1,0 +1,110 @@
+@model List<SmartEnergy.Web.Services.NotificationItemModel>
+@{
+    ViewData["Title"] = "Bildirimler - KEPSAŞ SmartEnergy";
+}
+
+<div class="d-flex align-items-center justify-content-between mb-4">
+    <div>
+        <h2 class="fw-bold mb-1" style="color: var(--kepsas-navy);">
+            <i class="bi bi-bell-fill text-warning me-2"></i> Bildirimler & Duyurular
+        </h2>
+        <p class="text-muted mb-0">Aboneliğiniz, faturalarınız ve randevularınız hakkındaki güncel bildirimler.</p>
+    </div>
+    <div>
+        <span class="badge bg-light text-navy border px-3 py-2 fw-semibold">
+            Toplam: @Model.Count Adet
+        </span>
+    </div>
+</div>
+
+<div class="portal-card p-0 border overflow-hidden">
+    @if (Model == null || !Model.Any())
+    {
+        <div class="p-5 text-center text-muted">
+            <i class="bi bi-inbox fs-1 d-block mb-2 text-secondary"></i>
+            Henüz yeni bir bildiriminiz bulunmamaktadır.
+        </div>
+    }
+    else
+    {
+        <div class="list-group list-group-flush">
+            @foreach (var notif in Model)
+            {
+                var badgeClass = notif.Type switch
+                {
+                    "Fatura" => "bg-danger",
+                    "Randevu" => "bg-warning text-dark",
+                    "Ödeme" => "bg-success",
+                    "Tasarruf" => "bg-info text-dark",
+                    "Duyuru" => "bg-primary",
+                    _ => "bg-secondary"
+                };
+
+                var bgClass = !notif.IsRead ? "bg-light bg-opacity-75" : "";
+
+                <div class="list-group-item p-4 border-bottom @bgClass transition-all" id="notif-@notif.Id">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="badge @badgeClass">@notif.Type</span>
+                            @if (!notif.IsRead)
+                            {
+                                <span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25" style="font-size:10px;">YENİ</span>
+                            }
+                        </div>
+                        <small class="text-muted">
+                            <i class="bi bi-clock me-1"></i> @notif.CreatedAtUtc.ToString("dd.MM.yyyy HH:mm")
+                        </small>
+                    </div>
+
+                    <h5 class="fw-bold text-navy mb-2">@notif.Title</h5>
+                    <p class="text-secondary mb-3" style="font-size: 14.5px; line-height: 1.5;">@notif.Message</p>
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            @if (notif.Type == "Fatura")
+                            {
+                                <a asp-controller="Bill" asp-action="Index" class="btn btn-sm btn-outline-danger fw-semibold">
+                                    <i class="bi bi-receipt me-1"></i> Faturayı İncele
+                                </a>
+                            }
+                            else if (notif.Type == "Randevu")
+                            {
+                                <a asp-controller="QuickAccess" asp-action="Randevu" class="btn btn-sm btn-outline-warning fw-semibold">
+                                    <i class="bi bi-calendar me-1"></i> Randevu Detayı
+                                </a>
+                            }
+                        </div>
+
+                        @if (!notif.IsRead)
+                        {
+                            <button class="btn btn-sm btn-light border text-muted" onclick="markAsRead('@notif.Id')">
+                                <i class="bi bi-check2 me-1"></i> Okundu Olarak İşaretle
+                            </button>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@section Scripts {
+<script>
+    async function markAsRead(id) {
+        try {
+            const resp = await fetch('/Notification/MarkRead?id=' + id, { method: 'POST' });
+            if (resp.ok) {
+                const item = document.getElementById('notif-' + id);
+                if (item) {
+                    item.classList.remove('bg-light');
+                    item.querySelectorAll('.badge.bg-danger').forEach(el => {
+                        if (el.innerText === 'YENİ') el.remove();
+                    });
+                }
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    }
+</script>
+}

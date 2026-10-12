@@ -1,0 +1,24 @@
+@{
+    ViewData["Title"] = "Ödeme Kanalları";
+}
+
+<div class="mb-4">
+    <h2 class="fw-bold mb-1" style="color: var(--kepsas-navy);"><i class="bi bi-credit-card-2-front text-primary me-2"></i> Ödeme Kanalları & Banka Anlaşmaları</h2>
+    <p class="text-muted">KEPSAŞ elektrik faturalarınızı komisyonsuz olarak ödeyebileceğiniz tüm resmi kanallar.</p>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-6">
+        <div class="portal-card p-4 border h-100">
+            <h4 class="fw-bold text-navy mb-3"><i class="bi bi-globe me-2 text-primary"></i> 1. KEPSAŞ Online Abone Portalı</h4>
+            <p class="text-muted">Portalımız üzerinden 7/24 tüm kredi ve banka kartları ile güvenli (3D Secure) fatura ödemesi yapabilirsiniz.</p>
+            <a asp-controller="Bill" asp-action="Index" class="btn btn-sm btn-primary bg-navy">Faturalara Git ve Öde</a>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="portal-card p-4 border h-100">
+            <h4 class="fw-bold text-navy mb-3"><i class="bi bi-bank me-2 text-success"></i> 2. Anlaşmalı Bankalar & Otomatik Ödeme</h4>
+            <p class="text-muted">Ziraat Bankası, VakıfBank, Halkbank, İş Bankası, Garanti BBVA, Yapı Kredi, Akbank ve PTT şubelerinden ödeme yapabilir veya otomatik ödeme talimatı verebilirsiniz.</p>
+        </div>
+    </div>
+</div>

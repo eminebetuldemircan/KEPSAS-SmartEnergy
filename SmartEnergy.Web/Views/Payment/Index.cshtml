@@ -1,0 +1,74 @@
+@model List<SmartEnergy.Web.Services.PaymentHistoryItemModel>
+@{
+    ViewData["Title"] = "Ödemelerim";
+}
+
+<div class="mb-4 d-flex justify-content-between align-items-center flex-wrap gap-2">
+    <div>
+        <h2 class="fw-bold mb-1" style="color: var(--kepsas-navy);">Ödemelerim & Tahsilat Dekontları</h2>
+        <p class="text-muted mb-0">Veritabanına kayıtlı geçmiş ödemelerinizi inceleyin ve dekont bilgilerinizi görüntüleyin.</p>
+    </div>
+    <a asp-controller="Bill" asp-action="Index" class="btn btn-danger fw-bold">
+        <i class="bi bi-credit-card me-1"></i> Fatura Öde
+    </a>
+</div>
+
+@if (ViewBag.SuccessMessage != null)
+{
+    <div class="alert alert-success alert-dismissible fade show p-3 mb-4" role="alert">
+        <i class="bi bi-check-circle-fill me-2 fs-5"></i> <strong>İşlem Başarılı!</strong> @ViewBag.SuccessMessage
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="portal-card p-0 border overflow-hidden">
+    <div class="table-responsive">
+        <table class="table-custom align-middle">
+            <thead>
+                <tr>
+                    <th>İşlem Tarihi</th>
+                    <th>Fatura No</th>
+                    <th>Tutar</th>
+                    <th>Ödeme Yöntemi</th>
+                    <th>Referans No</th>
+                    <th>Durum</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.PaymentDate.ToString("dd.MM.yyyy HH:mm")</td>
+                            <td><strong>@item.BillNumber</strong></td>
+                            <td><strong class="text-success">@item.Amount.ToString("N2") ₺</strong></td>
+                            <td><i class="bi bi-credit-card me-1"></i> @item.PaymentMethod</td>
+                            <td><code>@item.TransactionId</code></td>
+                            <td><span class="badge badge-paid">Başarılı</span></td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td>17.04.2026 14:22</td>
+                        <td><strong>FTR-2026-004</strong></td>
+                        <td><strong class="text-success">655,00 ₺</strong></td>
+                        <td><i class="bi bi-credit-card me-1"></i> Online Kredi Kartı</td>
+                        <td><code>TXN-99812</code></td>
+                        <td><span class="badge badge-paid">Başarılı</span></td>
+                    </tr>
+                    <tr>
+                        <td>15.03.2026 09:10</td>
+                        <td><strong>FTR-2026-003</strong></td>
+                        <td><strong class="text-success">575,00 ₺</strong></td>
+                        <td><i class="bi bi-bank me-1"></i> Banka Havalesi</td>
+                        <td><code>TXN-99813</code></td>
+                        <td><span class="badge badge-paid">Başarılı</span></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

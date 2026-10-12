@@ -1,0 +1,132 @@
+﻿@model SmartEnergy.Web.Models.CreateConsumptionRecordViewModel
+
+@{
+    ViewData["Title"] = "Yeni Sayaç Okuması";
+}
+
+<div class="dashboard-page">
+
+    <div class="dashboard-header">
+        <div>
+            <h1>Yeni Sayaç Okuması</h1>
+            <p>
+                Elektrik sayacının güncel endeks bilgisini girin.
+            </p>
+        </div>
+
+        <a asp-controller="Meter"
+           asp-action="Details"
+           asp-route-id="@Model.MeterId"
+           class="filter-button"
+           style="background:#e5e7eb;
+                  color:#374151;
+                  text-decoration:none;">
+            ← Sayaç Detayına Dön
+        </a>
+    </div>
+
+
+    <div class="dashboard-card" style="max-width:700px;">
+
+        <div class="card-header">
+            <div>
+                <h2>Sayaç Okuma Bilgileri</h2>
+                <p>
+                    Yeni endeks bilgisi girildiğinde tüketim
+                    sistem tarafından otomatik hesaplanacaktır.
+                </p>
+            </div>
+        </div>
+
+
+        <form asp-controller="Meter"
+              asp-action="Reading"
+              method="post">
+
+            <input type="hidden"
+                   asp-for="MeterId" />
+
+
+            <div asp-validation-summary="ModelOnly"
+                 class="text-danger"
+                 style="margin-bottom:20px;">
+            </div>
+
+
+            <div class="form-group"
+                 style="margin-bottom:20px;">
+
+                <label asp-for="ReadingDate">
+                    Okuma Tarihi
+                </label>
+
+                <input asp-for="ReadingDate"
+                       type="datetime-local"
+                       class="form-control" />
+
+            </div>
+
+
+            <div class="form-group"
+                 style="margin-bottom:20px;">
+
+                <label asp-for="MeterIndex">
+                    Yeni Sayaç Endeksi
+                </label>
+
+                <input asp-for="MeterIndex"
+                       type="number"
+                       step="0.01"
+                       min="0"
+                       class="form-control"
+                       placeholder="Örn. 1250.50" />
+
+                <small style="color:#6b7280;">
+                    Sayaç üzerinde görünen güncel kWh değerini girin.
+                </small>
+
+            </div>
+
+
+            <div class="form-group"
+                 style="margin-bottom:25px;">
+
+                <label style="display:flex;
+                              align-items:center;
+                              gap:10px;
+                              cursor:pointer;">
+
+                    <input asp-for="IsEstimated"
+                           type="checkbox" />
+
+                    <span>
+                        Tahmini okuma olarak işaretle
+                    </span>
+
+                </label>
+
+            </div>
+
+
+            <div style="display:flex;
+                        gap:10px;">
+
+                <button type="submit"
+                        class="btn btn-primary">
+                    Okumayı Kaydet
+                </button>
+
+                <a asp-controller="Meter"
+                   asp-action="Details"
+                   asp-route-id="@Model.MeterId"
+                   class="btn btn-outline-secondary">
+                    İptal
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>

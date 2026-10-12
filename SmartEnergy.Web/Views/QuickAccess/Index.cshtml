@@ -1,0 +1,120 @@
+@{
+    ViewData["Title"] = "Hızlı İşlemler";
+}
+
+<div class="mb-4">
+    <h2 class="fw-bold mb-1" style="color: var(--kepsas-navy);">Hızlı İşlemler & Online Başvurular</h2>
+    <p class="text-muted">KEPSAŞ abone portalı üzerinden doğrudan gerçekleştirebileceğiniz tüm kurumsal işlemler.</p>
+</div>
+
+<div class="row g-4">
+
+    <!-- 1. Sözleşme Fesih -->
+    <div class="col-md-4">
+        <div class="portal-card h-100 p-4 border shadow-sm">
+            <div class="tile-icon mb-3" style="background:#fee2e2; color:#dc2626; width:50px; height:50px; font-size:24px;">
+                <i class="bi bi-file-earmark-x"></i>
+            </div>
+            <h4 class="fw-bold text-navy mb-2">1. Sözleşme Fesih Talebi</h4>
+            <p class="text-muted font-size-13 mb-3">Mevcut aboneliğinizi sonlandırmak ve güvence iadenizi başlatmak için başvuru yapın.</p>
+            <a asp-controller="QuickAccess" asp-action="Fesih" class="btn btn-sm btn-outline-danger w-100 fw-bold">Başvuru Yap <i class="bi bi-arrow-right"></i></a>
+        </div>
+    </div>
+
+    <!-- 2. Alacak İadesi -->
+    <div class="col-md-4">
+        <div class="portal-card h-100 p-4 border shadow-sm">
+            <div class="tile-icon mb-3" style="background:#dcfce7; color:#16a34a; width:50px; height:50px; font-size:24px;">
+                <i class="bi bi-cash-stack"></i>
+            </div>
+            <h4 class="fw-bold text-navy mb-2">2. Alacak İadesi Talebi</h4>
+            <p class="text-muted font-size-13 mb-3">Fazla veya mükerrer ödemelerinizin IBAN hesabınıza iadesini talep edin.</p>
+            <a asp-controller="QuickAccess" asp-action="AlacakIade" class="btn btn-sm btn-outline-success w-100 fw-bold">İade Talebi <i class="bi bi-arrow-right"></i></a>
+        </div>
+    </div>
+
+    <!-- 3. Güvence Bedeli -->
+    <div class="col-md-4">
+        <div class="portal-card h-100 p-4 border shadow-sm">
+            <div class="tile-icon mb-3" style="background:#e0f2fe; color:#0284c7; width:50px; height:50px; font-size:24px;">
+                <i class="bi bi-shield-check"></i>
+            </div>
+            <h4 class="fw-bold text-navy mb-2">3. Güvence Bedeli Sorgula</h4>
+            <p class="text-muted font-size-13 mb-3">Abonelik başlangıcında yatırılan güncellenmiş güvence bedelini sorgulayın.</p>
+            <a asp-controller="QuickAccess" asp-action="GuvenceBedeli" class="btn btn-sm btn-outline-primary w-100 fw-bold">Sorgula <i class="bi bi-arrow-right"></i></a>
+        </div>
+    </div>
+
+    <!-- 4. Tazminat -->
+    <div class="col-md-4">
+        <div class="portal-card h-100 p-4 border shadow-sm">
+            <div class="tile-icon mb-3" style="background:#ffedd5; color:#ea580c; width:50px; height:50px; font-size:24px;">
+                <i class="bi bi-award"></i>
+            </div>
+            <h4 class="fw-bold text-navy mb-2">4. Tazminat Sorgula</h4>
+            <p class="text-muted font-size-13 mb-3">Kesinti veya kalite standartları tazminat durumunuzu öğrenin.</p>
+            <a asp-controller="QuickAccess" asp-action="Tazminat" class="btn btn-sm btn-outline-warning w-100 fw-bold">Sorgula <i class="bi bi-arrow-right"></i></a>
+        </div>
+    </div>
+
+    <!-- 5. Randevu -->
+    <div class="col-md-4">
+        <div class="portal-card h-100 p-4 border shadow-sm">
+            <div class="tile-icon mb-3" style="background:#f3e8ff; color:#9333ea; width:50px; height:50px; font-size:24px;">
+                <i class="bi bi-calendar-check"></i>
+            </div>
+            <h4 class="fw-bold text-navy mb-2">5. Randevu İşlemleri</h4>
+            <p class="text-muted font-size-13 mb-3">Müşteri hizmetleri merkezlerimizden sıra beklemeden işlem için randevu alın.</p>
+            <a asp-controller="QuickAccess" asp-action="Randevu" class="btn btn-sm btn-outline-purple w-100 fw-bold" style="border-color:#9333ea; color:#9333ea;">Randevu Al <i class="bi bi-arrow-right"></i></a>
+        </div>
+    </div>
+
+    <!-- 6. Ödeme Kanalları -->
+    <div class="col-md-4">
+        <div class="portal-card h-100 p-4 border shadow-sm">
+            <div class="tile-icon mb-3" style="background:#e0e7ff; color:#4f46e5; width:50px; height:50px; font-size:24px;">
+                <i class="bi bi-credit-card-2-front"></i>
+            </div>
+            <h4 class="fw-bold text-navy mb-2">6. Ödeme Kanalları</h4>
+            <p class="text-muted font-size-13 mb-3">Anlaşmalı bankalar, otomatik ödeme ve vezne lokasyonlarını görüntüleyin.</p>
+            <a asp-controller="QuickAccess" asp-action="OdemeKanallari" class="btn btn-sm btn-outline-primary w-100 fw-bold">İncele <i class="bi bi-arrow-right"></i></a>
+        </div>
+    </div>
+
+    <!-- 7. Evrak İşlemleri -->
+    <div class="col-md-4">
+        <div class="portal-card h-100 p-4 border shadow-sm">
+            <div class="tile-icon mb-3" style="background:#f1f5f9; color:#475569; width:50px; height:50px; font-size:24px;">
+                <i class="bi bi-file-earmark-arrow-up"></i>
+            </div>
+            <h4 class="fw-bold text-navy mb-2">7. Evrak İşlemleri</h4>
+            <p class="text-muted font-size-13 mb-3">Abonelik ve başvuru evraklarınızı dijital olarak yükleyin ve takip edin.</p>
+            <a asp-controller="QuickAccess" asp-action="Evrak" class="btn btn-sm btn-outline-secondary w-100 fw-bold">Evrak Yükle <i class="bi bi-arrow-right"></i></a>
+        </div>
+    </div>
+
+    <!-- 8. Kaçak İhbar -->
+    <div class="col-md-4">
+        <div class="portal-card h-100 p-4 border shadow-sm">
+            <div class="tile-icon mb-3" style="background:#ccfbf1; color:#0d9488; width:50px; height:50px; font-size:24px;">
+                <i class="bi bi-shield-slash"></i>
+            </div>
+            <h4 class="fw-bold text-navy mb-2">8. Kaçak Kullanım İhbarı</h4>
+            <p class="text-muted font-size-13 mb-3">Usulsüz veya kaçak elektrik kullanım bildiriminde bulunun.</p>
+            <a asp-controller="QuickAccess" asp-action="KacakIhbar" class="btn btn-sm btn-outline-teal w-100 fw-bold" style="border-color:#0d9488; color:#0d9488;">İhbar Et <i class="bi bi-arrow-right"></i></a>
+        </div>
+    </div>
+
+    <!-- 9. Bilgi Edinme & 10. İtiraz -->
+    <div class="col-md-4">
+        <div class="portal-card h-100 p-4 border shadow-sm">
+            <div class="tile-icon mb-3" style="background:#ffe4e6; color:#e11d48; width:50px; height:50px; font-size:24px;">
+                <i class="bi bi-chat-dots"></i>
+            </div>
+            <h4 class="fw-bold text-navy mb-2">9-10. İtiraz & Bilgi Edinme</h4>
+            <p class="text-muted font-size-13 mb-3">Fatura itirazı, dilekçe, şikayet ve bilgi taleplerinizi iletin.</p>
+            <a asp-controller="QuickAccess" asp-action="ItirazSikayet" class="btn btn-sm btn-outline-danger w-100 fw-bold">Form Oluştur <i class="bi bi-arrow-right"></i></a>
+        </div>
+    </div>
+
+</div>

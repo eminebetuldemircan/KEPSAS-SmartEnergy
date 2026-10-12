@@ -1,0 +1,41 @@
+@{
+    ViewData["Title"] = "Sözleşme Fesih Talebi";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-7">
+        <div class="portal-card border shadow-sm p-4">
+            <h3 class="fw-bold mb-2" style="color: var(--kepsas-navy);"><i class="bi bi-file-earmark-x text-danger me-2"></i> Sözleşme Fesih Talebi</h3>
+            <p class="text-muted mb-4">Aboneliğinizi sonlandırmak ve kalan güvence bedeli iadenizi başlatmak için talebinizi iletin.</p>
+
+            <form asp-controller="QuickAccess" asp-action="SubmitForm" method="post">
+                <input type="hidden" name="formType" value="Sözleşme Fesih" />
+                <input type="hidden" name="title" value="Abonelik Fesih Başvurusu" />
+
+                <div class="form-group mb-3">
+                    <label>Feshedilecek Abonelik</label>
+                    <select class="form-input" required>
+                        <option value="SUB-380901">SUB-380901 (Melikgazi Ev Aboneliği)</option>
+                        <option value="SUB-380902">SUB-380902 (Kocasinan İşyeri Aboneliği)</option>
+                    </select>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label>Fesih Nedeni</label>
+                    <select class="form-input" required>
+                        <option>Taşınma / Adres Değişikliği</option>
+                        <option>Mülk Satışı / Tahliye</option>
+                        <option>Kullanım İhtiyacının Kalmaması</option>
+                    </select>
+                </div>
+
+                <div class="form-group mb-4">
+                    <label>Güvence Bedeli İadesi İçin IBAN</label>
+                    <input type="text" class="form-input" placeholder="TR38 0000 0000 0000 0000 0000 00" value="TR38 0006 2000 0000 1234 5678 90" required />
+                </div>
+
+                <button type="submit" class="btn btn-danger py-3 w-100 fw-bold">Fesih Başvurusunu Gönder <i class="bi bi-send me-1"></i></button>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,57 @@
+@model List<SmartEnergy.Web.Models.SubscriptionViewModel>
+
+@{
+    ViewData["Title"] = "Aboneliklerim";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold text-navy mb-1" style="color: var(--kepsas-navy);">Aboneliklerim</h2>
+        <p class="text-muted mb-0">KEPSAŞ sisteminde kayıtlı aboneliklerinizin ve sözleşmelerinizin detayları.</p>
+    </div>
+    <a href="#" class="btn btn-primary bg-navy border-0"><i class="bi bi-plus-circle me-1"></i> Yeni Abonelik Başvurusu</a>
+</div>
+
+<div class="row g-4 mb-4">
+    @if (Model != null && Model.Any())
+    {
+        @foreach (var sub in Model)
+        {
+            <div class="col-md-6">
+                <div class="portal-card h-100 p-4 border shadow-sm">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <span class="badge bg-light text-primary border mb-2 px-3 py-2 fw-semibold">Tesisat / Abone No: @sub.SubscriptionNumber</span>
+                            <h4 class="fw-bold text-dark mb-1">@sub.TariffName</h4>
+                            <small class="text-muted"><i class="bi bi-file-earmark-text me-1"></i> Sözleşme No: <strong>@sub.ContractNumber</strong></small>
+                        </div>
+                        <span class="badge badge-paid px-3 py-2">@sub.Status</span>
+                    </div>
+
+                    <hr class="my-3 text-muted opacity-25" />
+
+                    <div class="mb-3">
+                        <small class="text-muted d-block uppercase fw-bold mb-1" style="font-size: 11px;">KULLANIM ADRESİ</small>
+                        <span class="text-dark fw-medium"><i class="bi bi-geo-alt-fill text-danger me-1"></i> @sub.Address</span>
+                    </div>
+
+                    <div class="row g-2 mb-4 bg-light p-3 rounded">
+                        <div class="col-6">
+                            <small class="text-muted d-block" style="font-size: 11px;">SAYAÇ NUMARASI</small>
+                            <strong class="text-dark">@sub.MeterNumber</strong>
+                        </div>
+                        <div class="col-6">
+                            <small class="text-muted d-block" style="font-size: 11px;">BAŞLANGIÇ TARİHİ</small>
+                            <strong class="text-dark">@sub.StartDate.ToString("dd.MM.yyyy")</strong>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <a asp-controller="Subscription" asp-action="Details" asp-route-id="@sub.Id" class="btn btn-outline-primary btn-sm flex-grow-1"><i class="bi bi-info-circle me-1"></i> Abonelik Detayı</a>
+                        <a asp-controller="QuickAccess" asp-action="Fesih" class="btn btn-outline-danger btn-sm"><i class="bi bi-x-circle me-1"></i> Fesih Talebi</a>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>
